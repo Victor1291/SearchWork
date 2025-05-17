@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SearchWork</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="search">Поиск</string>
+    <string name="favorite">Избранное</string>
+    <string name="send_email">Отклики</string>
+    <string name="message">Сообщения</string>
+    <string name="profile">Профиль</string>
+</resources>
