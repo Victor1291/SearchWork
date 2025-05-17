@@ -23,3 +23,4 @@ rootProject.name = "SearchWork"
 include(":app")
 include(":data")
 include(":domain")
+include(":entity")

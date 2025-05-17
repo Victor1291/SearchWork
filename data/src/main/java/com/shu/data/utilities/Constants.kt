@@ -20,4 +20,4 @@ package com.shu.data.utilities
  * Constants used throughout the app.
  */
 const val DATABASE_NAME = "search-work"
-const val PLANT_DATA_FILENAME = "мок json.json"
+const val DATA_FILENAME = "мок json.json"

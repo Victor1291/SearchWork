@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shu.domain"
+    namespace = "com.shu.entity"
     compileSdk = 35
 
     defaultConfig {
@@ -35,14 +35,10 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":entity"))
-
+    implementation(libs.javax.inject)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    implementation(libs.javax.inject)
 
     //Hilt
     implementation(libs.hilt.android)

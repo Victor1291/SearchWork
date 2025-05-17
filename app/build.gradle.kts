@@ -42,6 +42,10 @@ android {
 
 dependencies {
 
+    implementation(project(":entity"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -55,7 +59,10 @@ dependencies {
 
 //Hilt
     implementation(libs.hilt.android)
+
     ksp(libs.hilt.android.compiler)
+
+    implementation(libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

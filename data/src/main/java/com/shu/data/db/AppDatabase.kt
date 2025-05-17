@@ -11,7 +11,7 @@ import androidx.work.workDataOf
 import com.shu.data.db.models.OfferDbo
 import com.shu.data.db.models.VacancyDbo
 import com.shu.data.utilities.DATABASE_NAME
-import com.shu.data.utilities.PLANT_DATA_FILENAME
+import com.shu.data.utilities.DATA_FILENAME
 import com.shu.data.workers.SeedDatabaseWorker
 import com.shu.data.workers.SeedDatabaseWorker.Companion.KEY_FILENAME
 
@@ -44,7 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
                             val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>()
-                                .setInputData(workDataOf(KEY_FILENAME to PLANT_DATA_FILENAME))
+                                .setInputData(workDataOf(KEY_FILENAME to DATA_FILENAME))
                                 .build()
                             WorkManager.getInstance(context).enqueue(request)
                         }

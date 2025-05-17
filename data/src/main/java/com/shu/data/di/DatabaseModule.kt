@@ -4,6 +4,8 @@ import android.content.Context
 import com.shu.data.db.AppDatabase
 import com.shu.data.db.OffersDao
 import com.shu.data.db.VacanciesDao
+import com.shu.data.repository.RepositoryImpl
+import com.shu.entity.repository.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,4 +32,11 @@ class DatabaseModule {
     fun provideVacanciesDao(appDatabase: AppDatabase): VacanciesDao {
         return appDatabase.vacanciesDao()
     }
+
+    @Provides
+    @Singleton
+    fun providesRepository(offersDao: OffersDao, ): Repository {
+        return RepositoryImpl(offersDao)
+    }
+
 }

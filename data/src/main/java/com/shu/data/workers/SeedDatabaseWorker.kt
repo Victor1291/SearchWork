@@ -8,8 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.shu.data.db.AppDatabase
-import com.shu.data.db.models.OfferDbo
-import com.shu.data.db.models.VacancyDbo
+import com.shu.data.models.SearchDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -23,14 +22,19 @@ class SeedDatabaseWorker(
             if (filename != null) {
                 applicationContext.assets.open(filename).use { inputStream ->
                     JsonReader(inputStream.reader()).use { jsonReader ->
-                        val offerType = object : TypeToken<List<OfferDbo>>() {}.type
-                        val vacancyType = object : TypeToken<List<VacancyDbo>>() {}.type
-                        val offers: List<OfferDbo> = Gson().fromJson(jsonReader, offerType)
-                        val vacancy: List<VacancyDbo> = Gson().fromJson(jsonReader, vacancyType)
+                        /* val offerType = object : TypeToken<List<OfferDbo>>() {}.type
+                         val vacancyType = object : TypeToken<List<VacancyDbo>>() {}.type*/
+                        val searchType = object : TypeToken<SearchDao>() {}.type
+
+
+                        /* val offers: List<OfferDbo> = Gson().fromJson(jsonReader, offerType)
+                         val vacancy: List<VacancyDbo> = Gson().fromJson(jsonReader, vacancyType)*/
+                        val search: SearchDao = Gson().fromJson(jsonReader, searchType)
 
                         val database = AppDatabase.getInstance(applicationContext)
-                        database.offersDao().insertAll(offers)
-                        database.vacanciesDao().insertAll(vacancy)
+                        Log.i(TAG, " search.offers = ${search.offers.size})")
+                        database.offersDao().insertAll(search.offers)
+                        database.vacanciesDao().insertAll(search.vacancies)
                         Result.success()
                     }
                 }
