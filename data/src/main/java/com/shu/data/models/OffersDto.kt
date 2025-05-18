@@ -2,10 +2,9 @@ package com.shu.data.models
 
 import com.google.gson.annotations.SerializedName
 import com.shu.data.db.models.OfferDbo
-import com.shu.entity.models.Offer
 
 
-data class Offers (
+data class OffersDto (
 
   @SerializedName("id"    ) var id    : String? = null,
   @SerializedName("title" ) var title : String? = null,
@@ -13,7 +12,7 @@ data class Offers (
 
 )
 
-fun Offers.toDb() : OfferDbo {
+fun OffersDto.toDb() : OfferDbo {
   return OfferDbo(
     id = this.id ?: "1",
     title = this.title ?: "no title",

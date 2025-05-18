@@ -7,11 +7,8 @@ import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
-import com.shu.data.data.Plant
 import com.shu.data.db.AppDatabase
-import com.shu.data.db.models.OfferDbo
-import com.shu.data.db.models.VacancyDbo
-import com.shu.data.models.SearchDao
+import com.shu.data.models.SearchDto
 import com.shu.data.models.toDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,8 +23,8 @@ class SeedDatabaseWorker(
             if (filename != null) {
                 applicationContext.assets.open(filename).use { inputStream ->
                     JsonReader(inputStream.reader()).use { jsonReader ->
-                        val searchType = object : TypeToken<SearchDao>() {}.type
-                        val search: SearchDao = Gson().fromJson(jsonReader, searchType)
+                        val searchType = object : TypeToken<SearchDto>() {}.type
+                        val search: SearchDto = Gson().fromJson(jsonReader, searchType)
 
                         val database = AppDatabase.getInstance(applicationContext)
                         Log.i(TAG, " search.offers = ${search.offers.size} :)")

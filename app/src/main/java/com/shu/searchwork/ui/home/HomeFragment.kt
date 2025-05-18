@@ -11,8 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shu.entity.models.Offer
+import com.shu.entity.models.Vacancy
 import com.shu.searchwork.databinding.FragmentHomeBinding
 import com.shu.searchwork.ui.adapter.OfferAdapter
+import com.shu.searchwork.ui.adapter.VacancyAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -46,11 +48,30 @@ class HomeFragment : Fragment() {
             view.adapter = offerAdapter
         }
 
+        val vacancyAdapter =
+            VacancyAdapter { vacancy ->
+                onClickVacancy(vacancy)
+            }
+
+        binding.recyclerVacancy.also { view ->
+            view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            view.adapter = vacancyAdapter
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.offers
-                    .collect { photoList ->
-                        offerAdapter.submitList(photoList)
+                    .collect { offers ->
+                        offerAdapter.submitList(offers)
+                    }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.vacancies
+                    .collect { vacancies ->
+                        vacancyAdapter.submitList(vacancies)
                     }
             }
         }
@@ -59,6 +80,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun onClick(offer: Offer) {
+        /*val bundle = bundleOf("photochka" to photo)
+        findNavController().navigate(
+            R.id.action_FirstFragment_to_SecondFragment,
+            bundle
+        )*/
+    }
+    private fun onClickVacancy(vacancy: Vacancy) {
         /*val bundle = bundleOf("photochka" to photo)
         findNavController().navigate(
             R.id.action_FirstFragment_to_SecondFragment,

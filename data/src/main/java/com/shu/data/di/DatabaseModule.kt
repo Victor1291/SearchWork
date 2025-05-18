@@ -35,8 +35,8 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun providesRepository(offersDao: OffersDao, ): Repository {
-        return RepositoryImpl(offersDao)
+    fun providesRepository(offersDao: OffersDao, vacanciesDao: VacanciesDao ): Repository {
+        return RepositoryImpl(offersDao,vacanciesDao )
     }
 
 }

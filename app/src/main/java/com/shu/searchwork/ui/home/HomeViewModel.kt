@@ -4,7 +4,9 @@ package com.shu.searchwork.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shu.domain.usecase.GetOffersUseCase
+import com.shu.domain.usecase.GetVacanciesUseCase
 import com.shu.entity.models.Offer
+import com.shu.entity.models.Vacancy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,10 +15,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    getOffersUseCase: GetOffersUseCase
+    getOffersUseCase: GetOffersUseCase,
+    getVacanciesUseCase: GetVacanciesUseCase,
 ) : ViewModel() {
 
     val offers: Flow<List<Offer>> = getOffersUseCase.invoke().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
+
+    val vacancies: Flow<List<Vacancy>> = getVacanciesUseCase.invoke().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()

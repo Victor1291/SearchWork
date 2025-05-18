@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface VacanciesDao {
     @Query("SELECT * FROM vacancies ")
-    fun getOffers(): Flow<List<VacancyDbo>>
+    fun getVacancies(): Flow<List<VacancyDbo>>
 
     @Query("SELECT * FROM vacancies WHERE id = :id")
-    fun getOffer(id: String): Flow<VacancyDbo>
+    fun getVacancy(id: String): Flow<VacancyDbo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(plants: List<VacancyDbo>)

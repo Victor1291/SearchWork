@@ -2,10 +2,9 @@ package com.shu.data.models
 
 import com.google.gson.annotations.SerializedName
 import com.shu.data.db.models.AddressDbo
-import com.shu.data.db.models.OfferDbo
 
 
-data class Address (
+data class AddressDao (
 
   @SerializedName("town"   ) var town   : String? = null,
   @SerializedName("street" ) var street : String? = null,
@@ -13,7 +12,7 @@ data class Address (
 
 )
 
-fun Address.toDb() : AddressDbo {
+fun AddressDao.toDb() : AddressDbo {
   return AddressDbo(
     town = this.town ?: "no",
     street = this.street ?: "no",
