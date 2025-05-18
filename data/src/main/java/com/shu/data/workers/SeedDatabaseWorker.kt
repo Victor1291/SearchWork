@@ -7,8 +7,12 @@ import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
+import com.shu.data.data.Plant
 import com.shu.data.db.AppDatabase
+import com.shu.data.db.models.OfferDbo
+import com.shu.data.db.models.VacancyDbo
 import com.shu.data.models.SearchDao
+import com.shu.data.models.toDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -22,19 +26,18 @@ class SeedDatabaseWorker(
             if (filename != null) {
                 applicationContext.assets.open(filename).use { inputStream ->
                     JsonReader(inputStream.reader()).use { jsonReader ->
-                        /* val offerType = object : TypeToken<List<OfferDbo>>() {}.type
-                         val vacancyType = object : TypeToken<List<VacancyDbo>>() {}.type*/
                         val searchType = object : TypeToken<SearchDao>() {}.type
-
-
-                        /* val offers: List<OfferDbo> = Gson().fromJson(jsonReader, offerType)
-                         val vacancy: List<VacancyDbo> = Gson().fromJson(jsonReader, vacancyType)*/
                         val search: SearchDao = Gson().fromJson(jsonReader, searchType)
 
                         val database = AppDatabase.getInstance(applicationContext)
-                        Log.i(TAG, " search.offers = ${search.offers.size})")
-                        database.offersDao().insertAll(search.offers)
-                        database.vacanciesDao().insertAll(search.vacancies)
+                        Log.i(TAG, " search.offers = ${search.offers.size} :)")
+                        Log.i(TAG, " search.vacancies = ${search.vacancies.size} :)")
+                        database.offersDao().insertAll(search.offers.map { offer ->
+                            offer.toDb()
+                        })
+                        database.vacanciesDao().insertAll(search.vacancies.map { vacancy ->
+                            vacancy.toDb()
+                        })
                         Result.success()
                     }
                 }
@@ -42,6 +45,23 @@ class SeedDatabaseWorker(
                 Log.e(TAG, "Error seeding database - no valid filename")
                 Result.failure()
             }
+           /* val filename = inputData.getString(KEY_FILENAME2)
+            if (filename != null) {
+                applicationContext.assets.open(filename).use { inputStream ->
+                    JsonReader(inputStream.reader()).use { jsonReader ->
+                        val plantType = object : TypeToken<List<Plant>>() {}.type
+                        val plantList: List<Plant> = Gson().fromJson(jsonReader, plantType)
+
+                        val database = AppDatabase.getInstance(applicationContext)
+                        database.plantDao().insertAll(plantList)
+
+                        Result.success()
+                    }
+                }
+            } else {
+                Log.e(TAG, "Error seeding database - no valid filename")
+                Result.failure()
+            }*/
         } catch (ex: Exception) {
             Log.e(TAG, "Error seeding database", ex)
             Result.failure()
@@ -51,5 +71,6 @@ class SeedDatabaseWorker(
     companion object {
         private const val TAG = "SeedDatabaseWorker"
         const val KEY_FILENAME = "DATA_FILENAME"
+        const val KEY_FILENAME2 = "DATA_FILENAME2"
     }
 }

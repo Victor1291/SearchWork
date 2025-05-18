@@ -16,7 +16,7 @@ interface VacanciesDao {
     @Query("SELECT * FROM vacancies ")
     fun getOffers(): Flow<List<VacancyDbo>>
 
-    @Query("SELECT * FROM offers WHERE id = :id")
+    @Query("SELECT * FROM vacancies WHERE id = :id")
     fun getOffer(id: String): Flow<VacancyDbo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package com.shu.data.utilities
+package com.shu.data.data
+
+import androidx.room.Embedded
+import androidx.room.Relation
 
 /**
- * Constants used throughout the app.
+ * This class captures the relationship between a [Plant] and a user's [GardenPlanting], which is
+ * used by Room to fetch the related entities.
  */
-const val DATABASE_NAME = "search-work"
-const val DATA_FILENAME = "мок json.json"
-const val PLANT_DATA_FILENAME = "plants.json"
+data class PlantAndGardenPlantings(
+    @Embedded
+    val plant: Plant,
+
+    @Relation(parentColumn = "id", entityColumn = "plant_id")
+    val gardenPlantings: List<GardenPlanting> = emptyList()
+)

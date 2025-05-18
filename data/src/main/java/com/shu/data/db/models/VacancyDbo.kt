@@ -4,22 +4,23 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "vacancies")
-data class VacancyDbo (
+data class VacancyDbo(
     @PrimaryKey
-    @ColumnInfo("id"               ) var id               : String           ,
-    @ColumnInfo("lookingNumber"    ) var lookingNumber    : Int?              = null,
-    @ColumnInfo("title"            ) var title            : String?           = null,
-    @Embedded("address") var address          : AddressDbo?          = AddressDbo(),
-    @ColumnInfo("company"          ) var company          : String?           = null,
-    @Embedded("experience") var experience       : ExperienceDbo?       = ExperienceDbo(),
-    @ColumnInfo("publishedDate"    ) var publishedDate    : String?           = null,
-    @ColumnInfo("isFavorite"       ) var isFavorite       : Boolean?          = null,
-    @Embedded("salary") var salary           : SalaryDbo?           = SalaryDbo(),
-   // @ColumnInfo("appliedNumber"    ) var appliedNumber    : Int?              = null,
-    @ColumnInfo("description"      ) var description      : String?           = null,
-    @ColumnInfo("responsibilities" ) var responsibilities : String?           = null,
-  //  @ColumnInfo("questions"        ) var questions        : ArrayList<String> = arrayListOf()
-
+    @ColumnInfo("id") val id: String,
+    @ColumnInfo("lookingNumber") val lookingNumber: Int,
+    @ColumnInfo("title") val title: String,
+    @Embedded("address") val address: AddressDbo? = AddressDbo(),
+    @ColumnInfo("company") val company: String,
+    @Embedded("experience") val experience: ExperienceDbo,
+    @ColumnInfo("publishedDate") val publishedDate: String,
+    @ColumnInfo("isFavorite") val isFavorite: Boolean,
+    @Embedded("salary") val salary: SalaryDbo,
+    @ColumnInfo("schedules") val schedules: List<String>,
+    @ColumnInfo("appliedNumber") val appliedNumber: Int,
+    @ColumnInfo("description") val description: String,
+    @ColumnInfo("responsibilities") val responsibilities: String,
+    @ColumnInfo("questions") val questions: List<String>
 )

@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package com.shu.data.utilities
+package com.shu.data.data
+
+import androidx.room.TypeConverter
+import java.util.Calendar
 
 /**
- * Constants used throughout the app.
+ * Type converters to allow Room to reference complex data types.
  */
-const val DATABASE_NAME = "search-work"
-const val DATA_FILENAME = "мок json.json"
-const val PLANT_DATA_FILENAME = "plants.json"
+class Converters {
+    @TypeConverter fun calendarToDatestamp(calendar: Calendar): Long = calendar.timeInMillis
+
+    @TypeConverter fun datestampToCalendar(value: Long): Calendar =
+        Calendar.getInstance().apply { timeInMillis = value }
+}

@@ -4,24 +4,36 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.shu.data.data.Converters
+import com.shu.data.data.GardenPlanting
+import com.shu.data.data.GardenPlantingDao
+import com.shu.data.data.Plant
+import com.shu.data.data.PlantDao
+import com.shu.data.data.StringConverters
 import com.shu.data.db.models.OfferDbo
 import com.shu.data.db.models.VacancyDbo
 import com.shu.data.utilities.DATABASE_NAME
 import com.shu.data.utilities.DATA_FILENAME
+import com.shu.data.utilities.PLANT_DATA_FILENAME
 import com.shu.data.workers.SeedDatabaseWorker
 import com.shu.data.workers.SeedDatabaseWorker.Companion.KEY_FILENAME
+import com.shu.data.workers.SeedDatabaseWorker.Companion.KEY_FILENAME2
 
 /**
  * The Room database for this app
  */
-@Database(entities = [OfferDbo::class, VacancyDbo::class], version = 1, exportSchema = false)
+@Database(entities = [OfferDbo::class, VacancyDbo::class, GardenPlanting::class, Plant::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class, StringConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun offersDao(): OffersDao
     abstract fun vacanciesDao(): VacanciesDao
+    abstract fun gardenPlantingDao(): GardenPlantingDao
+    abstract fun plantDao(): PlantDao
 
     companion object {
 
@@ -45,6 +57,7 @@ abstract class AppDatabase : RoomDatabase() {
                             super.onCreate(db)
                             val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>()
                                 .setInputData(workDataOf(KEY_FILENAME to DATA_FILENAME))
+                               // .setInputData(workDataOf(KEY_FILENAME2 to PLANT_DATA_FILENAME))
                                 .build()
                             WorkManager.getInstance(context).enqueue(request)
                         }
