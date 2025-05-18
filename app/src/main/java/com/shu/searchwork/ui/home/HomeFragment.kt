@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.shu.entity.models.Offer
 import com.shu.entity.models.Vacancy
 import com.shu.searchwork.databinding.FragmentHomeBinding
-import com.shu.searchwork.ui.adapter.OfferAdapter
-import com.shu.searchwork.ui.adapter.VacancyAdapter
+import com.shu.searchwork.ui.holders.ItemTypes
+import com.shu.searchwork.ui.holders.ViewHoldersManager
+import com.shu.searchwork.ui.holders.ViewHoldersManagerImpl
+import com.shu.searchwork.ui.holders.viewHolders.CardViewHolder
+import com.shu.searchwork.ui.holders.viewHolders.OneLine2ViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,6 +32,8 @@ class HomeFragment : Fragment() {
 
     private val viewModel by viewModels<HomeViewModel>()
 
+    private lateinit var viewHoldersManager: ViewHoldersManager
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,7 +43,12 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val offerAdapter =
+        viewHoldersManager = ViewHoldersManagerImpl().apply {
+            registerViewHolder(ItemTypes.ONE_LINE_STRINGS, OneLine2ViewHolder())
+            registerViewHolder(ItemTypes.CARD, CardViewHolder())
+        }
+
+       /* val offerAdapter =
             OfferAdapter { offer ->
                 onClick(offer)
             }
@@ -46,9 +56,19 @@ class HomeFragment : Fragment() {
         binding.recycler.also { view ->
             view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             view.adapter = offerAdapter
+        }*/
+
+        val galleryAdapter =
+            GalleryAdapter(viewHoldersManager)
+
+        binding.recycler.also { view ->
+
+            view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            view.adapter = galleryAdapter
         }
 
-        val vacancyAdapter =
+
+        /*val vacancyAdapter =
             VacancyAdapter { vacancy ->
                 onClickVacancy(vacancy)
             }
@@ -56,25 +76,25 @@ class HomeFragment : Fragment() {
         binding.recyclerVacancy.also { view ->
             view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             view.adapter = vacancyAdapter
-        }
+        }*/
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.offers
-                    .collect { offers ->
-                        offerAdapter.submitList(offers)
+                viewModel.stateUi
+                    .collect { state ->
+                        galleryAdapter.submitList(state)
                     }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.vacancies
-                    .collect { vacancies ->
-                        vacancyAdapter.submitList(vacancies)
-                    }
-            }
-        }
+        /*  viewLifecycleOwner.lifecycleScope.launch {
+              repeatOnLifecycle(Lifecycle.State.STARTED) {
+                  viewModel.vacancies
+                      .collect { vacancies ->
+                          vacancyAdapter.submitList(vacancies)
+                      }
+              }
+          }*/
 
         return root
     }

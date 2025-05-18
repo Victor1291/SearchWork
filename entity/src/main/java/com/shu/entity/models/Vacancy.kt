@@ -1,6 +1,7 @@
 package com.shu.entity.models
 
 data class Vacancy(
+     override val hasId: String = "vacancy",
      var id: String,
      var lookingNumber: Int,
      var title: String,
@@ -15,4 +16,4 @@ data class Vacancy(
      var description: String,
      var responsibilities: String,
      var questions: List<String>
-)
+): HasStringId
