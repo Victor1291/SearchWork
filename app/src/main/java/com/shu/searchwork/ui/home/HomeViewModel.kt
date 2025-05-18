@@ -8,10 +8,12 @@ import com.shu.domain.usecase.GetVacanciesUseCase
 import com.shu.entity.models.HasStringId
 import com.shu.entity.models.Offer
 import com.shu.entity.models.Offers
-import com.shu.entity.models.Vacancies
 import com.shu.entity.models.Vacancy
+import com.shu.searchwork.ui.holders.viewHolders.BottomButton
+import com.shu.searchwork.ui.holders.viewHolders.RecyclerHeader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -23,15 +25,32 @@ class HomeViewModel @Inject constructor(
     getVacanciesUseCase: GetVacanciesUseCase,
 ) : ViewModel() {
 
-    val offers: Flow<List<Offer>> = getOffersUseCase.invoke()
+    private val offers: Flow<List<Offer>> = getOffersUseCase.invoke()
 
-    val vacancies: Flow<List<Vacancy>> = getVacanciesUseCase.invoke()
+    private val vacancies: Flow<List<Vacancy>> = getVacanciesUseCase.invoke()
 
-    val stateUi = combine(offers, vacancies) { offers, vacancies ->
-        val list : MutableList<HasStringId> = mutableListOf()
-        list.add(Offers(offers = offers))
-        vacancies.forEach {vacancy ->
-           list.add(vacancy)
+    private val isClickButton = MutableStateFlow(false)
+
+    val stateUi = combine(offers, vacancies, isClickButton) { offers, vacancies, isClick ->
+        val list: MutableList<HasStringId> = mutableListOf()
+        if (offers.isNotEmpty()) {
+            list.add(Offers(offers = offers))
+        }
+        list.add(RecyclerHeader(text = "Вакансии для вас"))
+        val size = vacancies.size
+        if (size > 3 && !isClick) {
+            repeat(3) {
+                list.add(vacancies[it])
+            }
+            list.add(
+                BottomButton(
+                    text = "Ещё ${size - 3} вакансий"
+                )
+            )
+        } else {
+            vacancies.forEach {vacancy ->
+                list.add(vacancy)
+            }
         }
         list
     }.stateIn(
@@ -39,5 +58,9 @@ class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()
     )
+
+    fun clickButton() {
+        isClickButton.value = true
+    }
 
 }

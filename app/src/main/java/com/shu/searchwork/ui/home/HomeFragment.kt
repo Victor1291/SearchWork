@@ -1,6 +1,7 @@
 package com.shu.searchwork.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,15 +10,19 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shu.entity.models.Offer
 import com.shu.entity.models.Vacancy
 import com.shu.searchwork.databinding.FragmentHomeBinding
+import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ItemTypes
 import com.shu.searchwork.ui.holders.ViewHoldersManager
 import com.shu.searchwork.ui.holders.ViewHoldersManagerImpl
-import com.shu.searchwork.ui.holders.viewHolders.CardViewHolder
-import com.shu.searchwork.ui.holders.viewHolders.OneLine2ViewHolder
+import com.shu.searchwork.ui.holders.viewHolders.ButtonViewHolder
+import com.shu.searchwork.ui.holders.viewHolders.HeaderViewHolder
+import com.shu.searchwork.ui.holders.viewHolders.OffersCardViewHolder
+import com.shu.searchwork.ui.holders.viewHolders.VacanciesCardViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -44,8 +49,10 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         viewHoldersManager = ViewHoldersManagerImpl().apply {
-            registerViewHolder(ItemTypes.ONE_LINE_STRINGS, OneLine2ViewHolder())
-            registerViewHolder(ItemTypes.CARD, CardViewHolder())
+            registerViewHolder(ItemTypes.ONE_LINE_STRINGS, VacanciesCardViewHolder())
+            registerViewHolder(ItemTypes.CARD, OffersCardViewHolder())
+            registerViewHolder(ItemTypes.HEADER, HeaderViewHolder())
+            registerViewHolder(ItemTypes.BUTTON, ButtonViewHolder())
         }
 
        /* val offerAdapter =
@@ -59,7 +66,18 @@ class HomeFragment : Fragment() {
         }*/
 
         val galleryAdapter =
-            GalleryAdapter(viewHoldersManager)
+            GalleryAdapter(viewHoldersManager, AdapterClickListenerById { clickState ->
+
+                if (clickState.itemTypes == ItemTypes.BUTTON) {
+                   viewModel.clickButton()
+                }
+                if (clickState.itemTypes == ItemTypes.HEADER) {
+                    Log.d(
+                        "click Fragment",
+                        "click header in adapter ${clickState.id} , ${clickState.position} "
+                    )
+                }
+            })
 
         binding.recycler.also { view ->
 

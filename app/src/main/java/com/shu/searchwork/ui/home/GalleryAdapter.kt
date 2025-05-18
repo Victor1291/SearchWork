@@ -8,14 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.shu.entity.models.HasStringId
 import com.shu.searchwork.R
+import com.shu.searchwork.databinding.ButtonItemBinding
 import com.shu.searchwork.databinding.CardItemBinding
+import com.shu.searchwork.databinding.HeaderItemBinding
 import com.shu.searchwork.databinding.ItemVacancyBinding
+import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
 import com.shu.searchwork.ui.holders.ViewHoldersManager
 
 class GalleryAdapter(
     private val viewHoldersManager: ViewHoldersManager,
-    //private val clickListener: AdapterClickListenerById,
+    private val clickListener: AdapterClickListenerById,
     // private val onClick: (MediaStoreImage) -> Unit
 ) : ListAdapter<HasStringId, GalleryAdapter.DataViewHolder>(BaseDiffCallback()) {
 
@@ -23,8 +26,8 @@ class GalleryAdapter(
         private val binding: ViewBinding,
         private val holder: ViewHolderVisitor,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HasStringId, position: Int) =
-            holder.bind(binding, item, position)
+        fun bind(item: HasStringId,clickListener: AdapterClickListenerById, position: Int) =
+            holder.bind(binding, item, clickListener, position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
@@ -38,8 +41,16 @@ class GalleryAdapter(
 
             R.layout.item_vacancy -> {
                 ItemVacancyBinding.inflate(layoutInflater, parent, false)
-
             }
+
+            R.layout.button_item -> {
+                ButtonItemBinding.inflate(layoutInflater, parent, false)
+            }
+
+            R.layout.header_item -> {
+                HeaderItemBinding.inflate(layoutInflater, parent, false)
+            }
+
 
             else -> {
                 throw IllegalArgumentException("Wrong type")
@@ -50,7 +61,7 @@ class GalleryAdapter(
     }
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) =
-        holder.bind(getItem(position), position)
+        holder.bind(getItem(position),clickListener,  position)
 
     override fun getItemViewType(position: Int): Int =
         viewHoldersManager.getItemType(getItem(position))

@@ -4,10 +4,11 @@ import androidx.viewbinding.ViewBinding
 import com.shu.entity.models.Vacancy
 import com.shu.searchwork.R
 import com.shu.searchwork.databinding.ItemVacancyBinding
+import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
 
 
-class OneLine2ViewHolder : ViewHolderVisitor {
+class VacanciesCardViewHolder : ViewHolderVisitor {
 
     override val layout: Int = R.layout.item_vacancy
 
@@ -16,6 +17,7 @@ class OneLine2ViewHolder : ViewHolderVisitor {
     override fun bind(
         binding: ViewBinding,
         item: Any,
+        clickListener: AdapterClickListenerById,
         position: Int
     ) {
         with((binding as ItemVacancyBinding)) {

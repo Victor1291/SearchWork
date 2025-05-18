@@ -5,9 +5,10 @@ import com.shu.entity.models.Offers
 import com.shu.searchwork.R
 import com.shu.searchwork.databinding.CardItemBinding
 import com.shu.searchwork.ui.adapter.OfferAdapter
+import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
 
-class CardViewHolder : ViewHolderVisitor {
+class OffersCardViewHolder : ViewHolderVisitor {
 
     override val layout: Int = R.layout.card_item
 
@@ -16,6 +17,7 @@ class CardViewHolder : ViewHolderVisitor {
     override fun bind(
         binding: ViewBinding,
         item: Any,
+        clickListener: AdapterClickListenerById,
         position: Int
     ) {
         with((binding as CardItemBinding)) {
