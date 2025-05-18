@@ -30,6 +30,10 @@ class RepositoryImpl @Inject constructor(
            }
        }
     }
+
+    override suspend fun updateFavorite(id: String, isFavorite: Boolean) {
+        vacancyDao.updateFavorite(id,isFavorite)
+    }
 }
 
 

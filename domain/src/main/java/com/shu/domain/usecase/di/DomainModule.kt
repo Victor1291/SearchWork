@@ -2,6 +2,7 @@ package com.shu.domain.usecase.di
 
 import com.shu.domain.usecase.GetOffersUseCase
 import com.shu.domain.usecase.GetVacanciesUseCase
+import com.shu.domain.usecase.UpdateFavoriteUseCase
 import com.shu.entity.repository.Repository
 import dagger.Module
 import dagger.Provides
@@ -20,5 +21,10 @@ class DomainModule {
     @Provides
     fun provideGetOffersUseCase(repository: Repository): GetOffersUseCase {
         return GetOffersUseCase(repository)
+    }
+
+    @Provides
+    fun provideUpdateFavoriteUseCase(repository: Repository): UpdateFavoriteUseCase {
+        return UpdateFavoriteUseCase(repository)
     }
 }

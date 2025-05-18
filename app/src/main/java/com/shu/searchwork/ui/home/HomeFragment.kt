@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shu.entity.models.Offer
 import com.shu.entity.models.Vacancy
@@ -49,7 +48,7 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         viewHoldersManager = ViewHoldersManagerImpl().apply {
-            registerViewHolder(ItemTypes.ONE_LINE_STRINGS, VacanciesCardViewHolder())
+            registerViewHolder(ItemTypes.VACANCY, VacanciesCardViewHolder())
             registerViewHolder(ItemTypes.CARD, OffersCardViewHolder())
             registerViewHolder(ItemTypes.HEADER, HeaderViewHolder())
             registerViewHolder(ItemTypes.BUTTON, ButtonViewHolder())
@@ -71,11 +70,12 @@ class HomeFragment : Fragment() {
                 if (clickState.itemTypes == ItemTypes.BUTTON) {
                    viewModel.clickButton()
                 }
-                if (clickState.itemTypes == ItemTypes.HEADER) {
-                    Log.d(
-                        "click Fragment",
-                        "click header in adapter ${clickState.id} , ${clickState.position} "
-                    )
+                if (clickState.itemTypes == ItemTypes.VACANCY) {
+                    if(clickState.isFavorite) {
+                        viewModel.updateFavorite(clickState.itemId, clickState.favorite)
+                    }
+
+                    //TODO click on favorite
                 }
             })
 

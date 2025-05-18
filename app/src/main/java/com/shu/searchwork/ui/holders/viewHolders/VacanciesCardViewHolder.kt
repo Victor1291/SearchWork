@@ -1,10 +1,13 @@
 package com.shu.searchwork.ui.holders.viewHolders
 
+import android.util.Log
 import androidx.viewbinding.ViewBinding
 import com.shu.entity.models.Vacancy
 import com.shu.searchwork.R
 import com.shu.searchwork.databinding.ItemVacancyBinding
 import com.shu.searchwork.ui.holders.AdapterClickListenerById
+import com.shu.searchwork.ui.holders.ItemTypes
+import com.shu.searchwork.ui.holders.StateClick
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
 
 
@@ -29,6 +32,33 @@ class VacanciesCardViewHolder : ViewHolderVisitor {
                 binding.company.text = item.company
                 binding.experience.text = item.experience.text
                 binding.publishedDate.text = item.publishedDate
+                binding.favorite.isSelected = item.isFavorite
+                binding.favorite.setOnClickListener {
+                    binding.favorite.isSelected = !item.isFavorite
+                    clickListener.onClick(
+                        StateClick(
+                            id = item.hasId,
+                            position = position,
+                            itemTypes = ItemTypes.VACANCY,
+                            isFavorite = true,
+                            favorite = !item.isFavorite,
+                            itemId = item.id
+                        )
+                    )
+                }
+
+                binding.materialCardView.setOnClickListener {
+                    Log.d("click", "click on Button $position , ${item.hasId}")
+                    clickListener.onClick(
+                        StateClick(
+                            id = item.hasId,
+                            position = position,
+                            itemTypes = ItemTypes.VACANCY,
+                            isFavorite = false
+                        )
+                    )
+                }
+
             }
         }
 

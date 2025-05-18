@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shu.domain.usecase.GetOffersUseCase
 import com.shu.domain.usecase.GetVacanciesUseCase
+import com.shu.domain.usecase.UpdateFavoriteUseCase
 import com.shu.entity.models.HasStringId
 import com.shu.entity.models.Offer
 import com.shu.entity.models.Offers
@@ -17,12 +18,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     getOffersUseCase: GetOffersUseCase,
     getVacanciesUseCase: GetVacanciesUseCase,
+    private val updateFavoriteUseCase: UpdateFavoriteUseCase
 ) : ViewModel() {
 
     private val offers: Flow<List<Offer>> = getOffersUseCase.invoke()
@@ -61,6 +64,12 @@ class HomeViewModel @Inject constructor(
 
     fun clickButton() {
         isClickButton.value = true
+    }
+
+    fun updateFavorite(id: String,isFavorite: Boolean) {
+        viewModelScope.launch {
+            updateFavoriteUseCase.invoke(id, isFavorite)
+        }
     }
 
 }

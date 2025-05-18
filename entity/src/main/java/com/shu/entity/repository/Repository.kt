@@ -10,4 +10,6 @@ interface Repository {
 
     fun getVacancies(): Flow<List<Vacancy>>
 
+    suspend fun updateFavorite(id: String, isFavorite: Boolean)
+
 }

@@ -21,4 +21,7 @@ interface VacanciesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(plants: List<VacancyDbo>)
+
+    @Query("UPDATE vacancies SET isFavorite = :selected WHERE id = :vacancyId")
+    suspend fun updateFavorite(vacancyId: String, selected: Boolean)
 }
