@@ -11,6 +11,7 @@ import com.shu.searchwork.R
 import com.shu.searchwork.databinding.ButtonItemBinding
 import com.shu.searchwork.databinding.CardItemBinding
 import com.shu.searchwork.databinding.HeaderItemBinding
+import com.shu.searchwork.databinding.HeaderTwoItemBinding
 import com.shu.searchwork.databinding.ItemVacancyBinding
 import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
@@ -50,7 +51,9 @@ class GalleryAdapter(
             R.layout.header_item -> {
                 HeaderItemBinding.inflate(layoutInflater, parent, false)
             }
-
+            R.layout.header_two_item -> {
+                HeaderTwoItemBinding.inflate(layoutInflater, parent, false)
+            }
 
             else -> {
                 throw IllegalArgumentException("Wrong type")

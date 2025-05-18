@@ -1,18 +1,16 @@
-package com.shu.searchwork.ui.dashboard
+package com.shu.searchwork.ui.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.shu.searchwork.databinding.FragmentDashboardBinding
+import com.shu.searchwork.databinding.FragmentFavoriteBinding
 import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ItemTypes
 import com.shu.searchwork.ui.holders.ViewHoldersManager
@@ -22,14 +20,13 @@ import com.shu.searchwork.ui.holders.viewHolders.HeaderViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.OffersCardViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.VacanciesCardViewHolder
 import com.shu.searchwork.ui.home.GalleryAdapter
-import com.shu.searchwork.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<DashboardViewModel>()
@@ -40,7 +37,7 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         viewHoldersManager = ViewHoldersManagerImpl().apply {
@@ -57,7 +54,7 @@ class DashboardFragment : Fragment() {
                     viewModel.clickButton()
                 }
                 if (clickState.itemTypes == ItemTypes.VACANCY) {
-                    if(clickState.isFavorite) {
+                    if (clickState.isFavorite) {
                         viewModel.updateFavorite(clickState.itemId, clickState.favorite)
                     }
 
@@ -75,6 +72,7 @@ class DashboardFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateUi
                     .collect { state ->
+                        binding.count.text = countToString(state.size)
                         galleryAdapter.submitList(state)
                     }
             }
@@ -88,4 +86,14 @@ class DashboardFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun countToString(count: Int): String {
+        return when(count) {
+            0 -> ""
+            1,21,31,41,51 -> "$count вакансия"
+            2,3,4,22,23,24,32,33,34,42,43,44,52,53,54 -> "$count вакансии"
+            else -> "$count вакансий"
+        }
+    }
+
 }

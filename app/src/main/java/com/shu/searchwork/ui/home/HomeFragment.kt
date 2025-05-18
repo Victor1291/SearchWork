@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.shu.entity.models.Offer
 import com.shu.entity.models.Vacancy
 import com.shu.searchwork.databinding.FragmentHomeBinding
+import com.shu.searchwork.databinding.HeaderTwoItemBinding
 import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ItemTypes
 import com.shu.searchwork.ui.holders.ViewHoldersManager
@@ -21,6 +22,7 @@ import com.shu.searchwork.ui.holders.ViewHoldersManagerImpl
 import com.shu.searchwork.ui.holders.viewHolders.ButtonViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.HeaderViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.OffersCardViewHolder
+import com.shu.searchwork.ui.holders.viewHolders.TwoHeaderViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.VacanciesCardViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,26 +54,29 @@ class HomeFragment : Fragment() {
             registerViewHolder(ItemTypes.CARD, OffersCardViewHolder())
             registerViewHolder(ItemTypes.HEADER, HeaderViewHolder())
             registerViewHolder(ItemTypes.BUTTON, ButtonViewHolder())
+            registerViewHolder(ItemTypes.HEADER_TWO, TwoHeaderViewHolder())
         }
 
-       /* val offerAdapter =
-            OfferAdapter { offer ->
-                onClick(offer)
-            }
+        /* val offerAdapter =
+             OfferAdapter { offer ->
+                 onClick(offer)
+             }
 
-        binding.recycler.also { view ->
-            view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            view.adapter = offerAdapter
-        }*/
+         binding.recycler.also { view ->
+             view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+             view.adapter = offerAdapter
+         }*/
 
         val galleryAdapter =
             GalleryAdapter(viewHoldersManager, AdapterClickListenerById { clickState ->
 
                 if (clickState.itemTypes == ItemTypes.BUTTON) {
-                   viewModel.clickButton()
+                    binding.arrow.visibility = View.VISIBLE
+                    viewModel.clickButton()
+                    binding.recycler.scrollToPosition(0)
                 }
                 if (clickState.itemTypes == ItemTypes.VACANCY) {
-                    if(clickState.isFavorite) {
+                    if (clickState.isFavorite) {
                         viewModel.updateFavorite(clickState.itemId, clickState.favorite)
                     }
 
@@ -85,6 +90,11 @@ class HomeFragment : Fragment() {
             view.adapter = galleryAdapter
         }
 
+        binding.arrow.setOnClickListener {
+            binding.arrow.visibility = View.GONE
+            viewModel.clickButton()
+            binding.recycler.scrollToPosition(0)
+        }
 
         /*val vacancyAdapter =
             VacancyAdapter { vacancy ->
@@ -124,6 +134,7 @@ class HomeFragment : Fragment() {
             bundle
         )*/
     }
+
     private fun onClickVacancy(vacancy: Vacancy) {
         /*val bundle = bundleOf("photochka" to photo)
         findNavController().navigate(

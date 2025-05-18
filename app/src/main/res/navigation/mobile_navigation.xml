@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.shu.searchwork.ui.dashboard.DashboardFragment"
+        android:name="com.shu.searchwork.ui.favorite.DashboardFragment"
         android:label="@string/favorite"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_favorite" />
 
     <fragment
         android:id="@+id/navigation_notifications"

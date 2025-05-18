@@ -9,4 +9,7 @@
     <string name="message">Сообщения</string>
     <string name="profile">Профиль</string>
     <string name="answer">Откликнуться</string>
+    <string name="choice">Избранное</string>
+    <string name="icon_arrow">icon arrow</string>
+    <string name="icon_tune">icon_tune</string>
 </resources>

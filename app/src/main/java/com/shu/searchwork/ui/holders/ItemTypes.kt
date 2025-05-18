@@ -6,4 +6,5 @@ object ItemTypes {
     const val BUTTON = 1
     const val VACANCY = 2
     const val CARD = 3
+    const val HEADER_TWO = 4
 }
