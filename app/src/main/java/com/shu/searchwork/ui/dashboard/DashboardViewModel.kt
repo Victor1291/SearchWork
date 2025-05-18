@@ -1,13 +1,51 @@
 package com.shu.searchwork.ui.dashboard
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.shu.domain.usecase.GetVacanciesUseCase
+import com.shu.domain.usecase.UpdateFavoriteUseCase
+import com.shu.entity.models.HasStringId
+import com.shu.entity.models.Vacancy
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DashboardViewModel : ViewModel() {
+@HiltViewModel
+class DashboardViewModel @Inject constructor(
+    getVacanciesUseCase: GetVacanciesUseCase,
+    private val updateFavoriteUseCase: UpdateFavoriteUseCase
+) : ViewModel() {
+    private val vacancies: Flow<List<Vacancy>> = getVacanciesUseCase.invoke()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+    private val isClickButton = MutableStateFlow(false)
+
+    val stateUi = combine(vacancies, isClickButton) { vacancies, isClick ->
+        val list: MutableList<HasStringId> = mutableListOf()
+        vacancies.forEach { vacancy ->
+            if (vacancy.isFavorite) {
+                list.add(vacancy)
+            }
+        }
+        list
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
+
+    fun clickButton() {
+        isClickButton.value = true
     }
-    val text: LiveData<String> = _text
+
+    fun updateFavorite(id: String,isFavorite: Boolean) {
+        viewModelScope.launch {
+            updateFavoriteUseCase.invoke(id, isFavorite)
+        }
+    }
+
 }
