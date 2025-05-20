@@ -11,6 +11,7 @@ import com.shu.searchwork.ui.holders.ItemTypes
 import com.shu.searchwork.ui.holders.StateClick
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 
@@ -36,17 +37,7 @@ class VacanciesCardViewHolder : ViewHolderVisitor {
                 binding.experience.text = item.experience.text
 
 
-                val dateToLong = SimpleDateFormat("yyyy-MM-dd").let { formatter ->
-                    TimeUnit.MICROSECONDS.toSeconds(formatter.parse(item.publishedDate)?.time ?: 0)
-                }
-
-              //  Log.d("date","dateToLong $dateToLong ")
-                val dateToText = DateUtils.getRelativeTimeSpanString(
-                    dateToLong,
-                    System.currentTimeMillis(),
-                    DateUtils.DAY_IN_MILLIS
-                ).toString()
-                binding.publishedDate.text = dateToText
+                binding.publishedDate.text = "Опубликовано ${item.published}"
 
                 binding.favorite.isSelected = item.isFavorite
                 binding.favorite.setOnClickListener {
