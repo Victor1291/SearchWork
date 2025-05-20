@@ -19,7 +19,7 @@ import com.shu.searchwork.ui.holders.viewHolders.ButtonViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.HeaderViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.OffersCardViewHolder
 import com.shu.searchwork.ui.holders.viewHolders.VacanciesCardViewHolder
-import com.shu.searchwork.ui.home.GalleryAdapter
+import com.shu.searchwork.ui.home.MainAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,7 +48,7 @@ class DashboardFragment : Fragment() {
         }
 
         val galleryAdapter =
-            GalleryAdapter(viewHoldersManager, AdapterClickListenerById { clickState ->
+            MainAdapter(viewHoldersManager, AdapterClickListenerById { clickState ->
 
                 if (clickState.itemTypes == ItemTypes.BUTTON) {
                     viewModel.clickButton()

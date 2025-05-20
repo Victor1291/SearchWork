@@ -1,5 +1,6 @@
 package com.shu.searchwork.ui.adapter
 
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,6 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.shu.entity.models.Vacancy
 import com.shu.searchwork.databinding.ItemVacancyBinding
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 class VacancyAdapter(
     private val onClickImage: (Vacancy) -> Unit,
@@ -46,14 +49,34 @@ class VacancyViewHolder(
         this.item = item
 
         binding.title.text = item.title
-        binding.lookingNumber.text =  "Сейчас просматривает ${item.lookingNumber} человек"
+        binding.lookingNumber.text = "Сейчас просматривает ${item.lookingNumber} человек"
         binding.salary.text = item.salary.full
         binding.address.text = item.address.town
         binding.company.text = item.company
         binding.experience.text = item.experience.text
-        binding.publishedDate.text = item.publishedDate
+
+        val dateToLong = SimpleDateFormat("yyyy-MM-dd").let { formatter ->
+            TimeUnit.MICROSECONDS.toSeconds(formatter.parse(item.publishedDate)?.time ?: 0)
+        }
+        val dateToText = DateUtils.getRelativeTimeSpanString(
+            dateToLong,
+            System.currentTimeMillis(),
+            DateUtils.DAY_IN_MILLIS
+        ).toString()
+        binding.publishedDate.text = dateToText
 
     }
+
+    /* val date = DateUtils.getRelativeTimeSpanString(
+         TimeUnit.SECONDS.toMillis(mediaStoreImage.dateAdded),
+         System.currentTimeMillis(),
+         DateUtils.DAY_IN_MILLIS
+     ).toString()
+
+     private fun dateToTimestamp(day: Int, month: Int, year: Int): Long =
+         SimpleDateFormat("dd.MM.yyyy").let { formatter ->
+             TimeUnit.MICROSECONDS.toSeconds(formatter.parse("$day.$month.$year")?.time ?: 0)
+         }*/
 
 }
 

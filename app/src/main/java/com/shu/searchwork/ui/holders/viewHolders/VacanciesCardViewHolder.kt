@@ -1,5 +1,6 @@
 package com.shu.searchwork.ui.holders.viewHolders
 
+import android.text.format.DateUtils
 import android.util.Log
 import androidx.viewbinding.ViewBinding
 import com.shu.entity.models.Vacancy
@@ -9,6 +10,8 @@ import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ItemTypes
 import com.shu.searchwork.ui.holders.StateClick
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 
 class VacanciesCardViewHolder : ViewHolderVisitor {
@@ -31,7 +34,20 @@ class VacanciesCardViewHolder : ViewHolderVisitor {
                 binding.address.text = item.address.town
                 binding.company.text = item.company
                 binding.experience.text = item.experience.text
-                binding.publishedDate.text = item.publishedDate
+
+
+                val dateToLong = SimpleDateFormat("yyyy-MM-dd").let { formatter ->
+                    TimeUnit.MICROSECONDS.toSeconds(formatter.parse(item.publishedDate)?.time ?: 0)
+                }
+
+              //  Log.d("date","dateToLong $dateToLong ")
+                val dateToText = DateUtils.getRelativeTimeSpanString(
+                    dateToLong,
+                    System.currentTimeMillis(),
+                    DateUtils.DAY_IN_MILLIS
+                ).toString()
+                binding.publishedDate.text = dateToText
+
                 binding.favorite.isSelected = item.isFavorite
                 binding.favorite.setOnClickListener {
                     binding.favorite.isSelected = !item.isFavorite

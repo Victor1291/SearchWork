@@ -1,7 +1,7 @@
 package com.shu.searchwork.ui.home
 
+import android.app.FragmentManager.BackStackEntry
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.shu.entity.models.Offer
 import com.shu.entity.models.Vacancy
 import com.shu.searchwork.databinding.FragmentHomeBinding
-import com.shu.searchwork.databinding.HeaderTwoItemBinding
 import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ItemTypes
 import com.shu.searchwork.ui.holders.ViewHoldersManager
@@ -57,21 +56,11 @@ class HomeFragment : Fragment() {
             registerViewHolder(ItemTypes.HEADER_TWO, TwoHeaderViewHolder())
         }
 
-        /* val offerAdapter =
-             OfferAdapter { offer ->
-                 onClick(offer)
-             }
 
-         binding.recycler.also { view ->
-             view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-             view.adapter = offerAdapter
-         }*/
-
-        val galleryAdapter =
-            GalleryAdapter(viewHoldersManager, AdapterClickListenerById { clickState ->
+        val mainAdapter =
+            MainAdapter(viewHoldersManager, AdapterClickListenerById { clickState ->
 
                 if (clickState.itemTypes == ItemTypes.BUTTON) {
-                    binding.arrow.visibility = View.VISIBLE
                     viewModel.clickButton()
                     binding.recycler.post { // Мгновенная прокрутка к первому элементу
                         binding.recycler.scrollToPosition(0)
@@ -81,20 +70,17 @@ class HomeFragment : Fragment() {
                     if (clickState.isFavorite) {
                         viewModel.updateFavorite(clickState.itemId, clickState.favorite)
                     }
-
-                    //TODO click on favorite
                 }
             })
 
         binding.recycler.also { view ->
 
             view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            view.adapter = galleryAdapter
+            view.adapter = mainAdapter
         }
 
       //  val layoutManager = binding.recycler.layoutManager
         binding.arrow.setOnClickListener {
-            binding.arrow.visibility = View.GONE
             viewModel.clickButton()
            // layoutManager?.scrollToPosition(0)
             binding.recycler.post { // Мгновенная прокрутка к первому элементу
@@ -112,23 +98,20 @@ class HomeFragment : Fragment() {
             view.adapter = vacancyAdapter
         }*/
 
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateUi
                     .collect { state ->
-                        galleryAdapter.submitList(state)
+                        if (state.isArrow){
+                            binding.arrow.visibility = View.VISIBLE
+                        }else {
+                            binding.arrow.visibility = View.GONE
+                        }
+                        mainAdapter.submitList(state.list)
                     }
             }
         }
-
-        /*  viewLifecycleOwner.lifecycleScope.launch {
-              repeatOnLifecycle(Lifecycle.State.STARTED) {
-                  viewModel.vacancies
-                      .collect { vacancies ->
-                          vacancyAdapter.submitList(vacancies)
-                      }
-              }
-          }*/
 
         return root
     }
@@ -153,4 +136,5 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

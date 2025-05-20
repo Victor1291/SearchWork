@@ -17,11 +17,11 @@ import com.shu.searchwork.ui.holders.AdapterClickListenerById
 import com.shu.searchwork.ui.holders.ViewHolderVisitor
 import com.shu.searchwork.ui.holders.ViewHoldersManager
 
-class GalleryAdapter(
+class MainAdapter(
     private val viewHoldersManager: ViewHoldersManager,
     private val clickListener: AdapterClickListenerById,
     // private val onClick: (MediaStoreImage) -> Unit
-) : ListAdapter<HasStringId, GalleryAdapter.DataViewHolder>(BaseDiffCallback()) {
+) : ListAdapter<HasStringId, MainAdapter.DataViewHolder>(BaseDiffCallback()) {
 
     inner class DataViewHolder(
         private val binding: ViewBinding,

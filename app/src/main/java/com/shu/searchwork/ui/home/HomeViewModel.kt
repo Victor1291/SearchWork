@@ -22,6 +22,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class UiState(
+    var list: List<HasStringId> = emptyList(),
+    var isArrow: Boolean = false,
+)
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     getOffersUseCase: GetOffersUseCase,
@@ -33,7 +38,7 @@ class HomeViewModel @Inject constructor(
 
     private val vacancies: Flow<List<Vacancy>> = getVacanciesUseCase.invoke()
 
-    private val isClickButton = MutableStateFlow(false)
+    val isClickButton = MutableStateFlow(false)
 
     val stateUi = combine(offers, vacancies, isClickButton) { offers, vacancies, isClick ->
         val list: MutableList<HasStringId> = mutableListOf()
@@ -55,33 +60,36 @@ class HomeViewModel @Inject constructor(
                 )
             )
         } else {
-            list.add(TwoHeader(text = countToString(size), textTwo = "По соответствию ^"))
-            vacancies.forEach {vacancy ->
+            list.add(TwoHeader(text = countToString(size), textTwo = "По соответствию "))
+            vacancies.forEach { vacancy ->
                 list.add(vacancy)
             }
         }
-        list
+        UiState(
+            list = list,
+            isArrow = isClick
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = emptyList()
+        initialValue = UiState()
     )
 
     fun clickButton() {
         isClickButton.value = !isClickButton.value
     }
 
-    fun updateFavorite(id: String,isFavorite: Boolean) {
+    fun updateFavorite(id: String, isFavorite: Boolean) {
         viewModelScope.launch {
             updateFavoriteUseCase.invoke(id, isFavorite)
         }
     }
 
     fun countToString(count: Int): String {
-        return when(count) {
+        return when (count) {
             0 -> ""
-            1,21,31,41,51 -> "$count вакансия"
-            2,3,4,22,23,24,32,33,34,42,43,44,52,53,54 -> "$count вакансии"
+            1, 21, 31, 41, 51 -> "$count вакансия"
+            2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> "$count вакансии"
             else -> "$count вакансий"
         }
     }
