@@ -73,7 +73,9 @@ class HomeFragment : Fragment() {
                 if (clickState.itemTypes == ItemTypes.BUTTON) {
                     binding.arrow.visibility = View.VISIBLE
                     viewModel.clickButton()
-                    binding.recycler.scrollToPosition(0)
+                    binding.recycler.post { // Мгновенная прокрутка к первому элементу
+                        binding.recycler.scrollToPosition(0)
+                    }
                 }
                 if (clickState.itemTypes == ItemTypes.VACANCY) {
                     if (clickState.isFavorite) {
@@ -90,10 +92,14 @@ class HomeFragment : Fragment() {
             view.adapter = galleryAdapter
         }
 
+      //  val layoutManager = binding.recycler.layoutManager
         binding.arrow.setOnClickListener {
             binding.arrow.visibility = View.GONE
             viewModel.clickButton()
-            binding.recycler.scrollToPosition(0)
+           // layoutManager?.scrollToPosition(0)
+            binding.recycler.post { // Мгновенная прокрутка к первому элементу
+                binding.recycler.scrollToPosition(0)
+            }
         }
 
         /*val vacancyAdapter =

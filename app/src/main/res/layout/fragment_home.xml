@@ -22,13 +22,13 @@
             android:id="@+id/searchView"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="20dp"
             app:animateMenuItems="false"
             app:animateNavigationIcon="false"
             app:iconifiedByDefault="false"
             app:queryBackground="@android:color/transparent"
             app:queryHint="Должность, ключевые слова"
-            app:searchIcon="@drawable/searchdefault" />
+            app:searchIcon="@null" />
 
 
         <ImageView
